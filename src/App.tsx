@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Beer, 
@@ -99,15 +99,24 @@ export default function App() {
   const [lang, setLang] = useState<Language>('pt');
   const [selectedCategory, setSelectedCategory] = useState<Category | 'All'>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 200);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const t = uiTranslations[lang];
 
   const filteredItems = useMemo(() => {
+    const query = debouncedSearch.toLowerCase();
     const items = menuItems
       .filter(item => item.sales >= 5)
       .filter(item => {
-        const nameMatch = item.name[lang].toLowerCase().includes(searchQuery.toLowerCase());
-        const descMatch = item.description[lang].toLowerCase().includes(searchQuery.toLowerCase());
+        const nameMatch = item.name[lang].toLowerCase().includes(query);
+        const descMatch = item.description[lang].toLowerCase().includes(query);
         const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
         return matchesCategory && (nameMatch || descMatch);
       });
@@ -133,7 +142,7 @@ export default function App() {
       if (orderA !== orderB) return orderA - orderB;
       return b.sales - a.sales;
     });
-  }, [selectedCategory, searchQuery, lang]);
+  }, [selectedCategory, debouncedSearch, lang]);
 
   const categories = [
     { name: Category.Packs, icon: Zap },
@@ -298,16 +307,15 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 pb-32">
-              <AnimatePresence mode="popLayout">
+              <AnimatePresence initial={false}>
                 {filteredItems.map((item, idx) => (
                   <motion.div
-                    layout
                     key={item.id}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    exit={{ scale: 0.9, opacity: 0 }}
-                    transition={{ duration: 0.4, delay: idx * 0.03, ease: "easeOut" }}
-                    className="glass-card rounded-[2rem] md:rounded-[2.5rem] group flex flex-col overflow-hidden active:scale-[0.98] md:active:scale-[0.97] touch-none"
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3, delay: Math.min(idx * 0.02, 0.2), ease: "easeOut" }}
+                    className="glass-card rounded-[2rem] md:rounded-[2.5rem] group flex flex-col overflow-hidden active:scale-[0.98] md:active:scale-[0.97] touch-pan-y"
                   >
                     <div className="flex p-4 md:p-6 gap-4 md:gap-6">
                       <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-2xl md:rounded-[2rem] overflow-hidden flex-shrink-0 bg-black/40 border border-white/5 shadow-2xl">
@@ -315,6 +323,8 @@ export default function App() {
                           src={item.image || `https://picsum.photos/seed/${item.id}/500/500`} 
                           alt={item.name[lang]}
                           className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-70"
+                          loading="lazy"
+                          decoding="async"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center p-3">
                             <span className="text-3xl md:text-5xl filter drop-shadow-2xl opacity-60 group-hover:opacity-100 transition-all duration-500 transform-gpu rotate-[-5deg] group-hover:rotate-[0deg]">
