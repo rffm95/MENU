@@ -327,7 +327,7 @@ export default function App() {
                         <div className="min-w-0">
                           <div className="flex justify-between items-start mb-1 md:mb-2 gap-2">
                              <h3 className="font-black text-lg md:text-xl xl:text-2xl tracking-tighter leading-tight group-hover:text-heineken-light transition-colors uppercase italic font-sport truncate md:whitespace-normal">{item.name[lang]}</h3>
-                             <span className="text-jd-gold font-black text-xl md:text-2xl font-sport tracking-tighter italic shrink-0">€{item.price.toFixed(2)}</span>
+                             <span className="text-jd-gold font-black text-xl md:text-2xl font-sport tracking-tighter italic shrink-0 relative mt-[18px] md:mt-5 -ml-[12px] md:-ml-6">€{item.price.toFixed(2)}</span>
                           </div>
                           <p className="text-[11px] md:text-[13px] text-white/50 leading-tight font-medium line-clamp-2 md:line-clamp-3">
                              {item.description[lang]}
