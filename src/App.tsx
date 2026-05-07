@@ -346,13 +346,9 @@ export default function App() {
 
                         <div className="mt-auto flex items-center justify-between">
                            <div className="flex items-center gap-2 md:gap-3">
-                             {item.sales > 1000 ? (
+                             {item.sales > 1000 && (
                                <div className="stats-badge flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 shadow-[0_0_15px_rgba(0,130,0,0.2)]">
                                  <Flame className="w-3 h-3" /> <span className="hidden xs:inline">{t.hot}</span>
-                               </div>
-                             ) : (
-                               <div className="stats-badge flex items-center gap-1.5 md:gap-2 opacity-60 border-white/10 text-white/50 px-2 md:px-3 py-1 md:py-1.5">
-                                 <Clock className="w-3 h-3" /> <span className="hidden xs:inline">{t.topPick}</span>
                                </div>
                              )}
                            </div>
