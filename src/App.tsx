@@ -345,11 +345,7 @@ export default function App() {
                                  <Clock className="w-3 h-3" /> <span className="hidden xs:inline">{t.topPick}</span>
                                </div>
                              )}
-                             <span className="text-[9px] md:text-[10px] font-black uppercase text-white/20 whitespace-nowrap">{item.sales} {t.units}</span>
                            </div>
-                           <button className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 group-hover:bg-heineken group-hover:text-white flex items-center justify-center transition-all duration-300 flex-shrink-0">
-                              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-                           </button>
                         </div>
                       </div>
                     </div>
